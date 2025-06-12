@@ -33,6 +33,7 @@ int main (){
 			case 0:
 				print_header("EXITING");
 				write_lists("lists.txt",lists,lists_size);
+				free_list(lists, lists_size);
 				return 0;
 			case 1:	
 				create_new_list(lists, lists_size);

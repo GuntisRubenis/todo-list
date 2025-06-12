@@ -13,6 +13,7 @@ void add_task(struct list *list);
 void see_tasks(struct list *list);
 void write_lists(char *file_name, struct list *lists[], int lists_size);
 void load_lists(char *file_name, struct list *lists[]);
+void free_list(struct list *lists[], int size);
 
 #endif
 

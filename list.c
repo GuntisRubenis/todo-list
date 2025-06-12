@@ -114,12 +114,18 @@ void add_task(struct list *list){
 	struct task *new_task = malloc(sizeof(struct task));
 	check_malloc(new_task);
 	
-	fprintf(stdout, "Enter the task: ");
+	fprintf(stdout, "Enter task: ");
 	fgets(new_task->desc, sizeof(new_task->desc), stdin);
 	remove_newline(new_task->desc);
 
-	fprintf(stdout, "Select priority (0:LOW, 1:Medium, 2: High): ");
+	fprintf(stdout, "Enter priority (0:LOW, 1:Medium, 2: High): ");
 	scanf("%u", &new_task->priority);
+	
+	fprintf(stdout, "Enter due date (mm-dd-yyyy): ");
+	char *date = get_date();
+	strcpy(new_task->due_date, date);
+
+	new_task->days_left = days_left(new_task->due_date);
 	
 	new_task->next = list->first;
 	new_task->prev = NULL;
@@ -143,7 +149,7 @@ void see_tasks(struct list *list){
 	print_header(list->list_name);
 	fprintf(stdout, "%-50s %-10s %-10s %-10s\n", "Task", "Priority", "Due date", "Days left");
 	while(iter != NULL){
-		fprintf(stdout, "%s\n", iter->desc);
+		fprintf(stdout, "%-50s %-10d %-10s %-10d\n", iter->desc, iter->priority, iter->due_date, iter->days_left);
 		iter = iter->next;
 	}
 }
@@ -259,4 +265,20 @@ void load_lists(char *file_name, struct list *lists[]){
 
 	}
 	fclose(fp);
+}
+void free_task(struct list *list){
+	struct task *task = list->first;
+	while(task != NULL){
+		struct task *tmp = task->next;
+		free(task);
+		task = tmp;
+	}
+}
+void free_list(struct list *lists[], int size){
+	for(int i = 0; i < size; i++){
+		if (lists[i] != NULL){
+			free_task(lists[i]);
+			free(lists[i]);
+		}
+	}
 }
